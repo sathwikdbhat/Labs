@@ -1,8 +1,0 @@
-from transformers import pipeline
-
-summarizer=pipeline("text-generation", model="t5-small")
-text_to_summarize=input("Enter to summarize: ")
-prefixed_text = "summarize: " + text_to_summarize
-summary=summarizer(prefixed_text,max_length=100, min_length=30, do_sample=False)
-print("\nSummarized Text: ")
-print(summary[0]['generated_text'])
