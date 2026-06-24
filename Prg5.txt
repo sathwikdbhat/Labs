@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import Counter
+
+d = np.random.rand(100)
+train = d[:50]
+label = ["Class1" if x<=0.5 else "Class2" for x in train]
+test = d[50:]
+
+def knn(x,k):
+    dist = [(abs(x-train[i]),label[i]) for i in range(len(train))]
+    dist.sort()
+    return Counter([i[1] for i in dist[:k]]).most_common(1)[0][0]
+
+k = 3
+pred = [knn(x,k) for x in test]
+for i,x in enumerate(test,51):
+    print("x"+str(i),"=",round(x,4),":",pred[i-51])
+c1 = [test[i] for i in range(len(test)) if pred[i]=="Class1"]
+c2 = [test[i] for i in range(len(test)) if pred[i]=="Class2"]
+plt.figure(figsize=(8,5))
+
+plt.scatter([x for i,x in enumerate(train) if label[i]=="Class1"],
+            [0]*len([x for i,x in enumerate(train) if label[i]=="Class1"]),
+            label="Train Class1")
+plt.scatter([x for i,x in enumerate(train) if label[i]=="Class2"],
+            [0]*len([x for i,x in enumerate(train) if label[i]=="Class2"]),
+            label="Train Class2")
+
+plt.scatter(c1,[1]*len(c1),marker='x',label="Test Class1")
+plt.scatter(c2,[1]*len(c2),marker='x',label="Test Class2")
+plt.title("KNN Classification (k=3)")
+plt.legend()
+plt.grid()
+plt.show()
